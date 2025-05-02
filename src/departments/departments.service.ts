@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { Department } from './entities/department.entity';
+import { DepartmentRepository } from './department.repository';
 
 @Injectable()
 export class DepartmentsService {
-  create(createDepartmentDto: CreateDepartmentDto) {
-    return 'This action adds a new department';
+  constructor(
+    private readonly departmentRepository: DepartmentRepository,
+  ) {}
+
+  async findAll(): Promise<Department[]> {
+    return this.departmentRepository.find();
   }
 
-  findAll() {
-    return `This action returns all departments`;
+  async findOne(id: string): Promise<Department> {
+    const department = await this.departmentRepository.findOne({
+      where: { id },
+    });
+    if (!department) {
+      throw new NotFoundException(`Department with ID ${id} not found`);
+    }
+    return department;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} department`;
+  async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
+    const department = this.departmentRepository.create(createDepartmentDto);
+    return this.departmentRepository.save(department);
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  async update(id: string, updateDepartmentDto: UpdateDepartmentDto): Promise<Department> {
+    const department = await this.findOne(id);
+    Object.assign(department, updateDepartmentDto);
+    return this.departmentRepository.save(department);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} department`;
+  async remove(id: string): Promise<void> {
+    const department = await this.findOne(id);
+    await this.departmentRepository.remove(department);
   }
 }

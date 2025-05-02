@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
-import { ManagerReviewService } from './manager_reviews.service';
 import { CreateManagerReviewDto } from './dto/create-manager_review.dto';
 import { UpdateManagerReviewDto } from './dto/update-manager_review.dto';
+import { ManagerReviewsService } from './manager_reviews.service';
 
 @Controller('manager-reviews')
 export class ManagerReviewController {
-  constructor(private readonly managerReviewService: ManagerReviewService) {}
+  constructor(private readonly managerReviewService: ManagerReviewsService) {}
 
   @Post()
   create(@Body() createManagerReviewDto: CreateManagerReviewDto) {

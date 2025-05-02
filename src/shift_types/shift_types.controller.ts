@@ -19,16 +19,16 @@ export class ShiftTypesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.shiftTypesService.findOne(+id);
+    return this.shiftTypesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateShiftTypeDto: UpdateShiftTypeDto) {
-    return this.shiftTypesService.update(+id, updateShiftTypeDto);
+    return this.shiftTypesService.update(id, updateShiftTypeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.shiftTypesService.remove(+id);
+    return this.shiftTypesService.remove(id);
   }
 }

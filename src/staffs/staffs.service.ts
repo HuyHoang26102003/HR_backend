@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Staff } from './entities/staff.entity';
@@ -6,6 +6,7 @@ import { Job } from 'src/jobs/entities/job.entity';
 import { JobLevel } from 'src/job_levels/entities/job_level.entity';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
+import { StaffsRepository } from './staffs.repository';
 
 @Injectable()
 export class StaffService {
@@ -16,6 +17,7 @@ export class StaffService {
     private jobRepository: Repository<Job>,
     @InjectRepository(JobLevel)
     private jobLevelRepository: Repository<JobLevel>,
+    private readonly staffsRepository: StaffsRepository,
   ) {}
 
   async create(createStaffDto: CreateStaffDto): Promise<Staff> {
@@ -33,11 +35,17 @@ export class StaffService {
   }
 
   async findAll(): Promise<Staff[]> {
-    return this.staffRepository.find({ relations: ['job', 'job_level', 'manager_reviews'] });
+    return this.staffsRepository.find();
   }
 
   async findOne(id: string): Promise<Staff> {
-    return this.staffRepository.findOneOrFail({ where: { id }, relations: ['job', 'job_level', 'manager_reviews'] });
+    const staff = await this.staffsRepository.findOne({
+      where: { id },
+    });
+    if (!staff) {
+      throw new NotFoundException(`Staff with ID ${id} not found`);
+    }
+    return staff;
   }
 
   async update(id: string, updateStaffDto: UpdateStaffDto): Promise<Staff> {
@@ -53,6 +61,7 @@ export class StaffService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.staffRepository.delete(id);
+    const staff = await this.findOne(id);
+    await this.staffsRepository.remove(staff);
   }
 }

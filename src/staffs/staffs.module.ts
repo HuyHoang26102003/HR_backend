@@ -5,11 +5,12 @@ import { Job } from 'src/jobs/entities/job.entity';
 import { JobLevel } from 'src/job_levels/entities/job_level.entity';
 import { StaffService } from './staffs.service';
 import { StaffController } from './staffs.controller';
+import { StaffsRepository } from './staffs.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Staff, Job, JobLevel])],
   controllers: [StaffController],
-  providers: [StaffService],
+  providers: [StaffService, StaffsRepository],
   exports: [StaffService],
 })
 export class StaffModule {}

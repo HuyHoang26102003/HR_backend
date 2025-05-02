@@ -1,44 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ManagerReview } from './entities/manager_review.entity';
 import { Staff } from 'src/staffs/entities/staff.entity';
 import { CreateManagerReviewDto } from './dto/create-manager_review.dto';
 import { UpdateManagerReviewDto } from './dto/update-manager_review.dto';
+import { ManagerReviewsRepository } from './manager_reviews.repository';
 
 @Injectable()
-export class ManagerReviewService {
+export class ManagerReviewsService {
   constructor(
-    @InjectRepository(ManagerReview)
-    private managerReviewRepository: Repository<ManagerReview>,
     @InjectRepository(Staff)
     private staffRepository: Repository<Staff>,
+    private readonly managerReviewsRepository: ManagerReviewsRepository,
   ) {}
 
   async create(createManagerReviewDto: CreateManagerReviewDto): Promise<ManagerReview> {
-    const staff = await this.staffRepository.findOneOrFail({ where: { id: createManagerReviewDto.staff_id } });
-    const review = this.managerReviewRepository.create({ ...createManagerReviewDto, staff });
-    return this.managerReviewRepository.save(review);
+    const { staff_id, ...remainingmrd } = createManagerReviewDto;
+    const staff = await this.staffRepository.findOneOrFail({ where: { id: staff_id } });
+    
+    if (!staff) {
+      throw new NotFoundException(`Staff with ID ${staff_id} not found`);
+    }
+
+    const manangerReview = this.managerReviewsRepository.create({
+      ...remainingmrd,
+      staff // Set the job relation directly
+    });
+
+    return await this.managerReviewsRepository.save(manangerReview);
   }
 
   async findAll(): Promise<ManagerReview[]> {
-    return this.managerReviewRepository.find({ relations: ['staff'] });
+    return this.managerReviewsRepository.find();
   }
 
   async findOne(id: string): Promise<ManagerReview> {
-    return this.managerReviewRepository.findOneOrFail({ where: { id }, relations: ['staff'] });
+    const managerReview = await this.managerReviewsRepository.findOne({
+      where: { id },
+    });
+    if (!managerReview) {
+      throw new NotFoundException(`Manager Review with ID ${id} not found`);
+    }
+    return managerReview;
   }
 
   async update(id: string, updateManagerReviewDto: UpdateManagerReviewDto): Promise<ManagerReview> {
-    const review = await this.findOne(id);
+    const managerReview = await this.findOne(id);
     if (updateManagerReviewDto.staff_id) {
-      review.staff = await this.staffRepository.findOneOrFail({ where: { id: updateManagerReviewDto.staff_id } });
+      managerReview.staff = await this.staffRepository.findOneOrFail({ where: { id: updateManagerReviewDto.staff_id } });
     }
-    Object.assign(review, updateManagerReviewDto);
-    return this.managerReviewRepository.save(review);
+    Object.assign(managerReview, updateManagerReviewDto);
+    return this.managerReviewsRepository.save(managerReview);
   }
 
   async remove(id: string): Promise<void> {
-    await this.managerReviewRepository.delete(id);
+    const managerReview = await this.findOne(id);
+    await this.managerReviewsRepository.remove(managerReview);
   }
 }

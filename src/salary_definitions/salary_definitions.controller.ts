@@ -19,16 +19,16 @@ export class SalaryDefinitionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.salaryDefinitionsService.findOne(+id);
+    return this.salaryDefinitionsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSalaryDefinitionDto: UpdateSalaryDefinitionDto) {
-    return this.salaryDefinitionsService.update(+id, updateSalaryDefinitionDto);
+    return this.salaryDefinitionsService.update(id, updateSalaryDefinitionDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.salaryDefinitionsService.remove(+id);
+    return this.salaryDefinitionsService.remove(id);
   }
 }

@@ -19,16 +19,16 @@ export class JobLevelsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.jobLevelsService.findOne(+id);
+    return this.jobLevelsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateJobLevelDto: UpdateJobLevelDto) {
-    return this.jobLevelsService.update(+id, updateJobLevelDto);
+    return this.jobLevelsService.update(id, updateJobLevelDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.jobLevelsService.remove(+id);
+    return this.jobLevelsService.remove(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Job } from 'src/jobs/entities/job.entity';
 
 @Entity('leave_types')
@@ -7,6 +7,7 @@ export class LeaveType {
   id: string;
 
   @ManyToOne(() => Job, { nullable: false })
+  @JoinColumn({ name: 'job_id' })
   job: Job;
 
   @Column({ nullable: false })

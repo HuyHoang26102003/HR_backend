@@ -19,16 +19,16 @@ export class StaffLeavesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.staffLeavesService.findOne(+id);
+    return this.staffLeavesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStaffLeafDto: UpdateStaffLeaveDto) {
-    return this.staffLeavesService.update(+id, updateStaffLeafDto);
+    return this.staffLeavesService.update(id, updateStaffLeafDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.staffLeavesService.remove(+id);
+    return this.staffLeavesService.remove(id);
   }
 }

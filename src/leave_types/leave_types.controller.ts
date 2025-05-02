@@ -19,16 +19,16 @@ export class LeaveTypesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.leaveTypesService.findOne(+id);
+    return this.leaveTypesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLeaveTypeDto: UpdateLeaveTypeDto) {
-    return this.leaveTypesService.update(+id, updateLeaveTypeDto);
+    return this.leaveTypesService.update(id, updateLeaveTypeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.leaveTypesService.remove(+id);
+    return this.leaveTypesService.remove(id);
   }
 }
