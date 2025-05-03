@@ -16,6 +16,10 @@ export class CreateCandidateDto {
   @IsString()
   @IsNotEmpty()
   role_id: string;
+  
+  @IsString()
+  @IsNotEmpty()
+  job_level_id: string;
 
   @IsString()
   @IsNotEmpty()

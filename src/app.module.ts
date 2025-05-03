@@ -16,6 +16,7 @@ import { ShiftModule } from './shifts/shifts.module';
 import { JobModule } from './jobs/jobs.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { StaffRequestShiftsModule } from './staff_request_shifts/staff_request_shifts.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { AppService } from './app.service';
     ManagerReviewsModule,
     PayrollModule,
     SalaryDefinitionsModule,
+    StaffRequestShiftsModule,
     ShiftTypesModule,
     ShiftModule,
     StaffLeavesModule,

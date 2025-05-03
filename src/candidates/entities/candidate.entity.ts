@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Job } from 'src/jobs/entities/job.entity';
+import { JobLevel } from 'src/job_levels/entities/job_level.entity';
 
 @Entity('candidates')
 export class Candidate {
@@ -16,7 +23,12 @@ export class Candidate {
   contact_email: string;
 
   @ManyToOne(() => Job, { nullable: false })
+  @JoinColumn({ name: 'role_id' })
   role: Job;
+
+  @ManyToOne(() => JobLevel, { nullable: false })
+  @JoinColumn({ name: 'job_level_id' }) // Explicitly define the foreign key column
+  job_level: JobLevel;
 
   @Column({ nullable: false })
   resume: string;
